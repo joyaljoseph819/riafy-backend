@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use JWTAuth;
+use App\Models\User;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
@@ -41,11 +42,12 @@ class AuthController extends Controller
                 	'msg' => 'Could not create token',
                 ]);
         }
- 	
- 		//Token created, return with success response and jwt token
+        
+        $userName = User::select('name')->where('email',$request->email)->first();
         return response()->json([
             'statusCode' => 201,
             'token' => $token,
+            'userName' => $userName->name,
         ]);
     }
     public function logout(Request $request)
